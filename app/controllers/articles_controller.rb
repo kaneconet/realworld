@@ -1,4 +1,5 @@
 class ArticlesController < ApplicationController
+  # show, update, destroyアクションの前にset_articleメソッドを実行する
   before_action :set_article, only: [:show, :update, :destroy]
 
   def create
@@ -27,6 +28,7 @@ class ArticlesController < ApplicationController
     @article.destroy
   end
 
+  # ストロングパラメータ
   private
   def article_params
     params.require(:article).permit(:title, :description, :body)

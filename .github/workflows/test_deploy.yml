@@ -5,22 +5,26 @@ on:
     branches:
       - main
   pull_request:
+
 jobs:
-   test:
-     name: Test
-     runs-on: ubuntu-latest
+  test:
+    name: Test
+    runs-on: ubuntu-latest
 
-     steps:
-       - uses: actions/checkout@v2
+    services:
+      db:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: password
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
-       - uses: ruby/setup-ruby@v1
-         with:
-           ruby-version: 3.1
+    steps:
+      - uses: actions/checkout@v2
 
-       - name: Run bundle install
-         run: |
-           bundle config --local path vendor/bundle
-           bundle config --local without production
-           bundle install
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile
 
-       - run: bundle exec rails test
+      - name: Run Tests inside Docker Container
+        run: docker run -e RAILS_ENV=test -e RAILS_DATABASE_PASSWORD=password -p 3000:3000 your-docker-image-name bundle exec rails test

@@ -26,6 +26,15 @@ jobs:
       - name: Build the Docker image
         run: docker build . --file Dockerfile -t realworld
 
+      - name: Launch the Docker Compose
+        run: docker-compose up -d
+
+      - name: Wait for DB
+        run: sleep 20
+
+      - name: Create Database
+        run: docker-compose run --rm web rails db:create
+
       - name: Run Tests inside Docker Container
         run: |
           docker run \

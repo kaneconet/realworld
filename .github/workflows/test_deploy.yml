@@ -24,7 +24,14 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build the Docker image
-        run: docker build . --file Dockerfile
+        run: docker build . --file Dockerfile -t realworld
 
       - name: Run Tests inside Docker Container
-        run: docker run -e RAILS_ENV=test -e RAILS_DATABASE_PASSWORD=password -p 3000:3000 your-docker-image-name bundle exec rails test
+        run: |
+          docker run \
+            -e RAILS_ENV=test \
+            -e DATABASE_HOST=db \
+            -e DATABASE_USERNAME=root \
+            -e DATABASE_PASSWORD=password \
+            -p 3000:3000 \
+            realworld bundle exec rails test

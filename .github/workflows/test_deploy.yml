@@ -1,10 +1,10 @@
 name: Test and Deploy
 
 on:
+  pull_request:
   push:
     branches:
       - main
-  pull_request:
 
 jobs:
   test:
@@ -42,3 +42,22 @@ jobs:
 
       - name: Run Tests inside Docker Container
         run: docker-compose run --rm web bundle exec rails test
+
+  deploy:
+    name: Deploy app to EC2
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install SSH key
+        uses: webfactory/ssh-agent@v0.5.2
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Deploy
+        run: |
+          ssh -o StrictHostKeyChecking=no -A webapp@${{ secrets.TARGET_HOSTNAME }} "\
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/webapp:latest && \
+            docker-compose down && \
+            docker-compose up -d"

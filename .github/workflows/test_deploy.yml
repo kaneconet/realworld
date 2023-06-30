@@ -57,7 +57,7 @@ jobs:
 
       - name: Deploy
         run: |
-          ssh -o StrictHostKeyChecking=no -A webapp@${{ secrets.TARGET_HOSTNAME }} "\
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/webapp:latest && \
+          ssh -o StrictHostKeyChecking=no -A ec2-user@${{ secrets.TARGET_HOSTNAME }} "\
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/ec2-user:latest && \
             docker-compose down && \
             docker-compose up -d"

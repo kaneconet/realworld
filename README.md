@@ -6,7 +6,14 @@ RealWorld は実世界と同じ機能を持つプラットフォームを作る�
 
 ここでは、[RealWorld の バックエンドの API](https://realworld-docs.netlify.app/docs/specs/backend-specs/introduction) の仕様を満たす Rails API を作成します。
 
-# 実行方法
+# デプロイ版
+デプロイ版は以下のURLからアクセスできます。（基本的にインスタンスは停止しています）
+[RealWorld](http://clinixflow.com/)
+
+# インフラ構成図
+![RealWorld AWS](./images/realworld_aws.jpg)
+
+# ローカルでの実行方法
 
 Dockerコンテナのビルドと起動
 
